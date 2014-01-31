@@ -35,43 +35,57 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    PHPUnit
- * @subpackage Runner
+ * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.phpunit.de/
- * @since      File available since Release 2.0.0
+ * @since      File available since Release 3.5.12
  */
 
 /**
- * This class defines the current version of PHPUnit.
+ * Windows utility for PHP sub-processes.
  *
  * @package    PHPUnit
- * @subpackage Runner
+ * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
- * @since      Class available since Release 2.0.0
+ * @since      Class available since Release 3.5.12
  */
-class PHPUnit_Runner_Version
+class PHPUnit_Util_PHP_Windows extends PHPUnit_Util_PHP
 {
     /**
-     * Returns the current version of PHPUnit.
-     *
-     * @return string
+     * @var string
      */
-    public static function id()
+    protected $tempFile;
+
+    /**
+     * @param resource $pipe
+     * @since Method available since Release 3.5.12
+     */
+    protected function process($pipe, $job)
     {
-        return '3.5.12';
+        if (!($this->tempFile = tempnam(sys_get_temp_dir(), 'PHPUnit')) ||
+            file_put_contents($this->tempFile, $job) === FALSE) {
+            throw new PHPUnit_Framework_Exception(
+              'Unable to write temporary files for process isolation.'
+            );
+        }
+
+        fwrite(
+          $pipe,
+          "<?php require_once '" . addcslashes($this->tempFile, "'") .  "'; ?>"
+        );
     }
 
     /**
-     * @return string
+     * @since Method available since Release 3.5.12
      */
-    public static function getVersionString()
+    protected function cleanup()
     {
-        return 'PHPUnit 3.5.12 by Sebastian Bergmann.';
+        unlink($this->tempFile);
     }
 }

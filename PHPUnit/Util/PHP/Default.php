@@ -35,43 +35,34 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    PHPUnit
- * @subpackage Runner
+ * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.phpunit.de/
- * @since      File available since Release 2.0.0
+ * @since      File available since Release 3.5.12
  */
 
 /**
- * This class defines the current version of PHPUnit.
+ * Default utility for PHP sub-processes.
  *
  * @package    PHPUnit
- * @subpackage Runner
+ * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
- * @since      Class available since Release 2.0.0
+ * @since      Class available since Release 3.5.12
  */
-class PHPUnit_Runner_Version
+class PHPUnit_Util_PHP_Default extends PHPUnit_Util_PHP
 {
     /**
-     * Returns the current version of PHPUnit.
-     *
-     * @return string
+     * @param resource $pipe
+     * @since Method available since Release 3.5.12
      */
-    public static function id()
+    protected function process($pipe, $job)
     {
-        return '3.5.12';
-    }
-
-    /**
-     * @return string
-     */
-    public static function getVersionString()
-    {
-        return 'PHPUnit 3.5.12 by Sebastian Bergmann.';
+        fwrite($pipe, $job);
     }
 }
