@@ -3,6 +3,13 @@ PHPUnit 3.5
 
 This is the list of changes for the PHPUnit 3.5 release series.
 
+PHPUnit 3.5.1
+-------------
+
+* Fixed GH-30: `--repeat` option does not work.
+* Fixed GH-47: Failure message ignored in `assertSelectCount()`.
+* Fixed GH-48: Remove strict incomplete duplication.
+
 PHPUnit 3.5.0
 -------------
 
@@ -51,3 +58,5 @@ PHPUnit 3.5.0
 * Fixed TRAC-1068: `assertSame()` on two floats does not print the error message.
 * Fixed GH-7: Code paths that create a `PHPUnit_Framework_Warning` end up serializing/unserializing globals unconditionally.
 * PHPUnit now requires PHP 5.2.7 (or later) but PHP 5.3.3 (or later) is highly recommended.
+* PHPUnit now uses an autoloader to load its classes. If the tested code requires an autoloader, use `spl_autoload_register()` to register it.
+* `PHPUnit/Framework.php` should no longer be included by test code. If needed, include `bootstrap.php` to make PHPUnit's autoloader available.
