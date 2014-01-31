@@ -39,10 +39,6 @@ require_once dirname(__FILE__).'/bootstrap.php';
 
 PHP_CodeCoverage_Filter::getInstance()->addFileToBlacklist(__FILE__, 'PHPUNIT');
 
-if (extension_loaded('xdebug')) {
-    xdebug_disable();
-}
-
 define('PHPUnit_MAIN_METHOD', 'PHPUnit_TextUI_Command::main');
 
 PHPUnit_TextUI_Command::main();

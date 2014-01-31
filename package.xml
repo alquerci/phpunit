@@ -17,9 +17,9 @@
   <email>sebastian@phpunit.de</email>
   <active>yes</active>
  </lead>
- <date>2011-06-06</date>
+ <date>2011-08-19</date>
  <version>
-  <release>3.5.14</release>
+  <release>3.5.15</release>
   <api>3.5.7</api>
  </version>
  <stability>
@@ -504,7 +504,7 @@
     <min>5.2.7</min>
    </php>
    <pearinstaller>
-    <min>1.9.2</min>
+    <min>1.9.3</min>
    </pearinstaller>
    <package>
     <name>DbUnit</name>
@@ -546,10 +546,6 @@
     <channel>pear.symfony-project.com</channel>
     <min>1.0.2</min>
    </package>
-   <package>
-    <name>XML_RPC2</name>
-    <channel>pear.php.net</channel>
-   </package>
    <extension>
     <name>dom</name>
    </extension>
@@ -564,6 +560,10 @@
    </extension>
   </required>
   <optional>
+   <package>
+    <name>XML_RPC2</name>
+    <channel>pear.php.net</channel>
+   </package>
    <extension>
     <name>curl</name>
    </extension>
