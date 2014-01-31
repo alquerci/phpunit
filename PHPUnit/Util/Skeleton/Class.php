@@ -185,7 +185,15 @@ class PHPUnit_Util_Skeleton_Class extends PHPUnit_Util_Skeleton
             $args  = substr($testMethod['signature'], $start, $end);
 
             foreach (explode(',', $args) as $arg) {
-                list($type, $var) = explode(' ', $arg);
+                $arg = explode(' ', trim($arg));
+
+                if (count($arg) == 2) {
+                    $type = $arg[0];
+                    $var  = $arg[1];
+                } else {
+                    $type = NULL;
+                    $var  = $arg[0];
+                }
 
                 if ($type == $this->outClassName['fullyQualifiedClassName']) {
                     $argVariables[] = $var;

@@ -585,6 +585,12 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
 
             $autoload = var_export(dirname(__FILE__).'/../../bootstrap.php', true);
 
+            if ($result->isStrict()) {
+                $strict = 'TRUE';
+            } else {
+                $strict = 'FALSE';
+            }
+
             $data            = addcslashes(serialize($this->data), "'");
             $dependencyInput = addcslashes(
               serialize($this->dependencyInput), "'"
@@ -604,7 +610,8 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
                 'constants'                      => $constants,
                 'globals'                        => $globals,
                 'include_path'                   => $includePath,
-                'included_files'                 => $includedFiles
+                'included_files'                 => $includedFiles,
+                'strict'                         => $strict
               )
             );
 
