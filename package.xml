@@ -17,10 +17,10 @@
   <email>sebastian@phpunit.de</email>
   <active>yes</active>
  </lead>
- <date>2010-12-18</date>
+ <date>2011-01-08</date>
  <version>
-  <release>3.5.6</release>
-  <api>3.5.4</api>
+  <release>3.5.7</release>
+  <api>3.5.7</api>
  </version>
  <stability>
   <release>stable</release>
@@ -330,6 +330,11 @@
      </file>
     </dir>
     <dir name="Util">
+     <dir name="DeprecatedFeature">
+      <file baseinstalldir="/" name="Logger.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+     </dir>
      <dir name="Log">
       <file baseinstalldir="/" name="DBUS.php" role="php">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
@@ -409,6 +414,9 @@
      <file baseinstalldir="/" name="Configuration.php" role="php">
       <tasks:replace from="@package_version@" to="version" type="package-info" />
      </file>
+     <file baseinstalldir="/" name="DeprecatedFeature.php" role="php">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
      <file baseinstalldir="/" name="Diff.php" role="php">
       <tasks:replace from="@package_version@" to="version" type="package-info" />
      </file>
@@ -467,6 +475,9 @@
      <tasks:replace from="@package_version@" to="version" type="package-info" />
     </file>
    </dir>
+   <file baseinstalldir="/" name="ChangeLog.markdown" role="doc"/>
+   <file baseinstalldir="/" name="LICENSE" role="doc"/>
+   <file baseinstalldir="/" name="README.markdown" role="doc"/>
    <file baseinstalldir="/" name="phpunit.php" role="script">
     <tasks:replace from="/usr/bin/env php" to="php_bin" type="pear-config"/>
     <tasks:replace from="@php_bin@" to="php_bin" type="pear-config" />

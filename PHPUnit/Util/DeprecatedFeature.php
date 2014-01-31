@@ -2,7 +2,7 @@
 /**
  * PHPUnit
  *
- * Copyright (c) 2002-2011, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2002-2010, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,26 +36,68 @@
  *
  * @package    PHPUnit
  * @subpackage Framework
+ * @author     Ralph Schindler <ralph.schindler@zend.com>
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2002-2010 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.phpunit.de/
- * @since      File available since Release 2.0.0
+ * @since      File available since Release 3.5.7
  */
 
 /**
- * Extension to PHPUnit_Framework_AssertionFailedError to mark the special
- * case of an incomplete test.
+ * Class to hold the information about a deprecated feature that was used
  *
  * @package    PHPUnit
  * @subpackage Framework
+ * @author     Ralph Schindler <ralph.schindler@zend.com>
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2002-2010 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
- * @since      Class available since Release 2.0.0
+ * @since      Interface available since Release 3.5.7
  */
-class PHPUnit_Framework_IncompleteTestError extends PHPUnit_Framework_AssertionFailedError implements PHPUnit_Framework_IncompleteTest
+class PHPUnit_Util_DeprecatedFeature
 {
+    /**
+     * @var array
+     */
+    protected $traceInfo = array();
+
+    /**
+     * @var string
+     */
+    protected $message = NULL;
+
+    /**
+     * @param  string $message
+     * @param  array  $traceInfo
+     */
+    public function __construct($message, array $traceInfo = array())
+    {
+        $this->message   = $message;
+        $this->traceInfo = $traceInfo;
+    }
+
+    /**
+     * Build a string representation of the deprecated feature that was raised
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $string = '';
+
+        if (isset($this->traceInfo['file'])) {
+            $string .= $this->traceInfo['file'];
+
+            if (isset($this->traceInfo['line'])) {
+                $string .= ':' . $this->traceInfo['line'] . ' - ';
+            }
+        }
+
+        $string .= $this->message;
+
+        return $string;
+    }
 }
