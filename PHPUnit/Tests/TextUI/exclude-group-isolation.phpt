@@ -1,5 +1,5 @@
 --TEST--
-phpunit --process-isolation --exclude-group balanceIsInitiallyZero BankAccountTest ../../Samples/BankAccount/Tests/BankAccountTest.php
+phpunit --process-isolation --exclude-group balanceIsInitiallyZero BankAccountTest ../Fixtures/BankAccountTest.php
 --FILE--
 <?php
 $_SERVER['argv'][1] = '--no-configuration';
@@ -7,7 +7,7 @@ $_SERVER['argv'][2] = '--process-isolation';
 $_SERVER['argv'][3] = '--exclude-group';
 $_SERVER['argv'][4] = 'balanceIsInitiallyZero';
 $_SERVER['argv'][5] = 'BankAccountTest';
-$_SERVER['argv'][6] = dirname(__FILE__).'../../Samples/BankAccount/Tests/BankAccountTest.php';
+$_SERVER['argv'][6] = dirname(__FILE__).'/../Fixtures/BankAccountTest.php';
 
 require_once dirname(dirname(dirname(dirname(__FILE__)))) . '/bootstrap.php';
 PHPUnit_TextUI_Command::main();

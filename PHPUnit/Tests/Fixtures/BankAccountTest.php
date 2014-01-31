@@ -53,17 +53,17 @@
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 2.3.0
  */
-class PHPUnit_Samples_BankAccount_Tests_BankAccountTest extends PHPUnit_Framework_TestCase
+class PHPUnit_Tests_Fixtures_BankAccountTest extends PHPUnit_Framework_TestCase
 {
     protected $ba;
 
     protected function setUp()
     {
-        $this->ba = new PHPUnit_Samples_BankAccount_BankAccount;
+        $this->ba = new PHPUnit_Tests_Fixtures_BankAccount;
     }
 
     /**
-     * @covers PHPUnit_Samples_BankAccount_BankAccount::getBalance
+     * @covers PHPUnit_Tests_Fixtures_BankAccount::getBalance
      * @group balanceIsInitiallyZero
      * @group specification
      */
@@ -73,7 +73,7 @@ class PHPUnit_Samples_BankAccount_Tests_BankAccountTest extends PHPUnit_Framewor
     }
 
     /**
-     * @covers PHPUnit_Samples_BankAccount_BankAccount::withdrawMoney
+     * @covers PHPUnit_Tests_Fixtures_BankAccount::withdrawMoney
      * @group balanceCannotBecomeNegative
      * @group specification
      */
@@ -83,7 +83,7 @@ class PHPUnit_Samples_BankAccount_Tests_BankAccountTest extends PHPUnit_Framewor
             $this->ba->withdrawMoney(1);
         }
 
-        catch (PHPUnit_Samples_BankAccount_BankAccountException $e) {
+        catch (PHPUnit_Tests_Fixtures_BankAccountException $e) {
             $this->assertEquals(0, $this->ba->getBalance());
 
             return;
@@ -93,7 +93,7 @@ class PHPUnit_Samples_BankAccount_Tests_BankAccountTest extends PHPUnit_Framewor
     }
 
     /**
-     * @covers PHPUnit_Samples_BankAccount_BankAccount::depositMoney
+     * @covers PHPUnit_Tests_Fixtures_BankAccount::depositMoney
      * @group balanceCannotBecomeNegative
      * @group specification
      */
@@ -103,7 +103,7 @@ class PHPUnit_Samples_BankAccount_Tests_BankAccountTest extends PHPUnit_Framewor
             $this->ba->depositMoney(-1);
         }
 
-        catch (PHPUnit_Samples_BankAccount_BankAccountException $e) {
+        catch (BankAccountException $e) {
             $this->assertEquals(0, $this->ba->getBalance());
 
             return;
@@ -113,9 +113,9 @@ class PHPUnit_Samples_BankAccount_Tests_BankAccountTest extends PHPUnit_Framewor
     }
 
     /**
-     * @covers PHPUnit_Samples_BankAccount_BankAccount::getBalance
-     * @covers PHPUnit_Samples_BankAccount_BankAccount::depositMoney
-     * @covers PHPUnit_Samples_BankAccount_BankAccount::withdrawMoney
+     * @covers PHPUnit_Tests_Fixtures_BankAccount::getBalance
+     * @covers PHPUnit_Tests_Fixtures_BankAccount::depositMoney
+     * @covers PHPUnit_Tests_Fixtures_BankAccount::withdrawMoney
      * @group balanceCannotBecomeNegative
      */
 /*

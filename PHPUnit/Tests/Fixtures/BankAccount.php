@@ -43,7 +43,7 @@
  */
 
 /**
- * Money Interface.
+ * A bank account.
  *
  * @package    PHPUnit
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
@@ -53,14 +53,63 @@
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 2.3.0
  */
-interface PHPUnit_Samples_Money_IMoney
+class PHPUnit_Tests_Fixtures_BankAccount
 {
-    public function add(PHPUnit_Samples_Money_IMoney $m);
-    public function addMoney(PHPUnit_Samples_Money_Money $m);
-    public function addMoneyBag(PHPUnit_Samples_Money_MoneyBag $s);
-    public function isZero();
-    public function multiply($factor);
-    public function negate();
-    public function subtract(PHPUnit_Samples_Money_IMoney $m);
-    public function appendTo(PHPUnit_Samples_Money_MoneyBag $m);
+    /**
+     * The bank account's balance.
+     *
+     * @var    float
+     */
+    protected $balance = 0;
+
+    /**
+     * Returns the bank account's balance.
+     *
+     * @return float
+     */
+    public function getBalance()
+    {
+        return $this->balance;
+    }
+
+    /**
+     * Sets the bank account's balance.
+     *
+     * @param  float $balance
+     * @throws PHPUnit_Tests_Fixtures_BankAccountException
+     */
+    protected function setBalance($balance)
+    {
+        if ($balance >= 0) {
+            $this->balance = $balance;
+        } else {
+            throw new PHPUnit_Tests_Fixtures_BankAccountException;
+        }
+    }
+
+    /**
+     * Deposits an amount of money to the bank account.
+     *
+     * @param  float $balance
+     * @throws PHPUnit_Tests_Fixtures_BankAccountException
+     */
+    public function depositMoney($balance)
+    {
+        $this->setBalance($this->getBalance() + $balance);
+
+        return $this->getBalance();
+    }
+
+    /**
+     * Withdraws an amount of money from the bank account.
+     *
+     * @param  float $balance
+     * @throws PHPUnit_Tests_Fixtures_BankAccountException
+     */
+    public function withdrawMoney($balance)
+    {
+        $this->setBalance($this->getBalance() - $balance);
+
+        return $this->getBalance();
+    }
 }

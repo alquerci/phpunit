@@ -43,7 +43,7 @@
  */
 
 /**
- * A Money.
+ * A bank account exception.
  *
  * @package    PHPUnit
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
@@ -53,93 +53,6 @@
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 2.3.0
  */
-class PHPUnit_Samples_Money_Money implements PHPUnit_Samples_Money_IMoney
+class PHPUnit_Tests_Fixtures_BankAccountException extends RuntimeException
 {
-    protected $fAmount;
-    protected $fCurrency;
-
-    public function __construct($amount, $currency)
-    {
-        $this->fAmount   = $amount;
-        $this->fCurrency = $currency;
-    }
-
-    public function add(PHPUnit_Samples_Money_IMoney $m)
-    {
-        return $m->addMoney($this);
-    }
-
-    public function addMoney(PHPUnit_Samples_Money_Money $m)
-    {
-        if ($this->currency() == $m->currency()) {
-            return new PHPUnit_Samples_Money_Money($this->amount() + $m->amount(), $this->currency());
-        }
-
-        return PHPUnit_Samples_Money_MoneyBag::create($this, $m);
-    }
-
-    public function addMoneyBag(PHPUnit_Samples_Money_MoneyBag $s)
-    {
-        return $s->addMoney($this);
-    }
-
-    public function amount()
-    {
-        return $this->fAmount;
-    }
-
-    public function currency()
-    {
-        return $this->fCurrency;
-    }
-
-    public function equals($anObject)
-    {
-        if ($this->isZero() &&
-            $anObject instanceof PHPUnit_Samples_Money_IMoney) {
-            return $anObject->isZero();
-        }
-
-        if ($anObject instanceof PHPUnit_Samples_Money_Money) {
-            return ($this->currency() == $anObject->currency() &&
-                    $this->amount() == $anObject->amount());
-        }
-
-        return FALSE;
-    }
-
-    public function hashCode()
-    {
-        return crc32($this->fCurrency) + $this->fAmount;
-    }
-
-    public function isZero()
-    {
-        return $this->amount() == 0;
-    }
-
-    public function multiply($factor)
-    {
-        return new PHPUnit_Samples_Money_Money($this->amount() * $factor, $this->currency());
-    }
-
-    public function negate()
-    {
-        return new PHPUnit_Samples_Money_Money(-1 * $this->amount(), $this->currency());
-    }
-
-    public function subtract(PHPUnit_Samples_Money_IMoney $m)
-    {
-        return $this->add($m->negate());
-    }
-
-    public function toString()
-    {
-        return '[' . $this->amount() . ' ' . $this->currency() . ']';
-    }
-
-    public function appendTo(PHPUnit_Samples_Money_MoneyBag $m)
-    {
-        $m->appendMoney($this);
-    }
 }

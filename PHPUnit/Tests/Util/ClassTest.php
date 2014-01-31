@@ -36,70 +36,46 @@
  *
  * @package    PHPUnit
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
+ * @author     Ben Selby <benmatselby@gmail.com>
  * @copyright  2002-2010 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.phpunit.de/
- * @since      File available since Release 3.3.0
+ * @since      File available since Release 3.5.6
  */
 
-class PHPUnit_Samples_BowlingGame_BowlingGame
+/**
+ *
+ *
+ * @package    PHPUnit
+ * @author     Sebastian Bergmann <sebastian@phpunit.de>
+ * @author     Ben Selby <benmatselby@gmail.com>
+ * @copyright  2002-2010 Sebastian Bergmann <sebastian@phpunit.de>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    Release: @package_version@
+ * @link       http://www.phpunit.de/
+ * @since      Class available since Release 3.5.6
+ */
+class PHPUnit_Tests_Util_ClassTest extends PHPUnit_Framework_TestCase
 {
-    protected $rolls = array();
-
-    public function roll($pins)
+    /**
+     * Test that if a dynamic variable is defined on a class then
+     * the $attribute variable will be NULL, but the variable defined
+     * will be a public one so we are safe to return it
+     *
+     * Currently $attribute is NULL but we try and call isPublic() on it.
+     * This breaks for php 5.2.10
+     *
+     * @covers PHPUnit_Util_Class::getObjectAttribute
+     *
+     * @return void
+     */
+    public function testGetObjectAttributeCanHandleDynamicVariables()
     {
-        $this->rolls[] = $pins;
-    }
+        $attributeName = '_variable';
+        $object = new stdClass();
+        $object->$attributeName = 'Test';
 
-    protected function isSpare($frameIndex)
-    {
-        return $this->sumOfPinsInFrame($frameIndex) == 10;
-    }
-
-    protected function isStrike($frameIndex)
-    {
-        return $this->rolls[$frameIndex] == 10;
-    }
-
-    protected function sumOfPinsInFrame($frameIndex)
-    {
-        return $this->rolls[$frameIndex] +
-               $this->rolls[$frameIndex + 1];
-    }
-
-    protected function spareBonus($frameIndex)
-    {
-        return $this->rolls[$frameIndex + 2];
-    }
-
-    protected function strikeBonus($frameIndex)
-    {
-        return $this->rolls[$frameIndex + 1] +
-               $this->rolls[$frameIndex + 2];
-    }
-
-    public function score()
-    {
-        $score      = 0;
-        $frameIndex = 0;
-
-        for ($frame = 0; $frame < 10; $frame++) {
-            if ($this->isStrike($frameIndex)) {
-                $score += 10 + $this->strikeBonus($frameIndex);
-                $frameIndex++;
-            }
-
-            else if ($this->isSpare($frameIndex)) {
-                $score += 10 + $this->spareBonus($frameIndex);
-                $frameIndex += 2;
-            }
-
-            else {
-                $score += $this->sumOfPinsInFrame($frameIndex);
-                $frameIndex += 2;
-            }
-        }
-
-        return $score;
+        $actual = PHPUnit_Util_Class::getObjectAttribute($object, $attributeName);
+        $this->assertEquals('Test', $actual);
     }
 }

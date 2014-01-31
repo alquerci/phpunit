@@ -1,12 +1,12 @@
 --TEST--
-phpunit --process-isolation --verbose BankAccountTest ../../Samples/BankAccount/Tests/BankAccountTest.php
+phpunit --process-isolation --verbose BankAccountTest ../Fixtures/BankAccountTest.php
 --FILE--
 <?php
 $_SERVER['argv'][1] = '--no-configuration';
 $_SERVER['argv'][2] = '--process-isolation';
 $_SERVER['argv'][3] = '--verbose';
 $_SERVER['argv'][4] = 'BankAccountTest';
-$_SERVER['argv'][5] = dirname(__FILE__).'../../Samples/BankAccount/Tests/BankAccountTest.php';
+$_SERVER['argv'][5] = dirname(__FILE__).'/../Fixtures/BankAccountTest.php';
 
 require_once dirname(dirname(dirname(dirname(__FILE__)))) . '/bootstrap.php';
 PHPUnit_TextUI_Command::main();
@@ -14,7 +14,7 @@ PHPUnit_TextUI_Command::main();
 --EXPECTF--
 PHPUnit %s by Sebastian Bergmann.
 
-PHPUnit_Samples_BankAccount_Tests_BankAccountTest
+PHPUnit_Tests_Fixtures_BankAccount
 ...
 
 Time: %i %s, Memory: %sMb

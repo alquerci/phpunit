@@ -14,9 +14,6 @@
       <directory suffix="Test.php">PHPUnit/Tests/Runner</directory>
       <directory suffix="Test.php">PHPUnit/Tests/Util</directory>
     </testsuite>
-    <testsuite name="Samples Test Suite">
-      <directory suffix="Test.php">PHPUnit/Samples/*/Tests</directory>
-    </testsuite>
   </testsuites>
 
   <logging>
@@ -34,10 +31,6 @@
       <directory suffix=".php">PHPUnit/Runner</directory>
       <directory suffix=".php">PHPUnit/TextUI</directory>
       <directory suffix=".php">PHPUnit/Util</directory>
-      <directory suffix=".php">PHPUnit/Samples</directory>
-      <exclude>
-        <directory>PHPUnit/Samples/*/Tests</directory>
-      </exclude>
     </whitelist>
   </filter>
 </phpunit>
