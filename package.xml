@@ -17,9 +17,9 @@
   <email>sebastian@phpunit.de</email>
   <active>yes</active>
  </lead>
- <date>2011-01-20</date>
+ <date>2011-02-12</date>
  <version>
-  <release>3.5.10</release>
+  <release>3.5.11</release>
   <api>3.5.7</api>
  </version>
  <stability>
@@ -538,6 +538,10 @@
     <channel>pear.symfony-project.com</channel>
     <min>1.0.2</min>
    </package>
+   <package>
+    <name>XML_RPC2</name>
+    <channel>pear.php.net</channel>
+   </package>
    <extension>
     <name>dom</name>
    </extension>
@@ -553,16 +557,16 @@
   </required>
   <optional>
    <extension>
+    <name>curl</name>
+   </extension>
+   <extension>
     <name>dbus</name>
    </extension>
    <extension>
     <name>json</name>
    </extension>
    <extension>
-    <name>pdo</name>
-   </extension>
-   <extension>
-    <name>soap</name>
+    <name>simplexml</name>
    </extension>
    <extension>
     <name>tokenizer</name>
