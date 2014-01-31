@@ -98,7 +98,7 @@ class PHPUnit_Util_ErrorHandler
             }
         }
 
-        if ($errno == E_NOTICE || $errno == E_STRICT) {
+        if ($errno == E_NOTICE || $errno == E_USER_NOTICE || $errno == E_STRICT) {
             if (PHPUnit_Framework_Error_Notice::$enabled !== TRUE) {
                 return FALSE;
             }
@@ -106,7 +106,7 @@ class PHPUnit_Util_ErrorHandler
             $exception = 'PHPUnit_Framework_Error_Notice';
         }
 
-        else if ($errno == E_WARNING) {
+        else if ($errno == E_WARNING || $errno == E_USER_WARNING) {
             if (PHPUnit_Framework_Error_Warning::$enabled !== TRUE) {
                 return FALSE;
             }
