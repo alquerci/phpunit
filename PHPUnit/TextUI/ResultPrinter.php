@@ -68,6 +68,11 @@ class PHPUnit_TextUI_ResultPrinter extends PHPUnit_Util_Printer implements PHPUn
     protected $column = 0;
 
     /**
+     * @var integer
+     */
+    protected $maxColumn;
+
+    /**
      * @var boolean
      */
     protected $lastTestFailed = FALSE;
@@ -523,6 +528,7 @@ class PHPUnit_TextUI_ResultPrinter extends PHPUnit_Util_Printer implements PHPUn
         if ($this->numTests == -1) {
             $this->numTests      = count($suite);
             $this->numTestsWidth = strlen((string)$this->numTests);
+            $this->maxColumn     = 69 - (2 * $this->numTestsWidth);
         }
     }
 
@@ -580,14 +586,15 @@ class PHPUnit_TextUI_ResultPrinter extends PHPUnit_Util_Printer implements PHPUn
         $this->column++;
         $this->numTestsRun++;
 
-        if ($this->column == 60) {
+        if ($this->column == $this->maxColumn) {
             $this->write(
               sprintf(
                 ' %' . $this->numTestsWidth . 'd / %' .
-                       $this->numTestsWidth . "d",
+                       $this->numTestsWidth . 'd (%3s%%)',
 
                 $this->numTestsRun,
-                $this->numTests
+                $this->numTests,
+                floor(($this->numTestsRun / $this->numTests) * 100)
               )
             );
 

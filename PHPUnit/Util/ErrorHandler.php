@@ -43,6 +43,12 @@
  * @since      File available since Release 2.3.0
  */
 
+// Workaround for http://bugs.php.net/bug.php?id=47987,
+// see https://github.com/sebastianbergmann/phpunit/issues#issue/125 for details
+require_once dirname(__FILE__).'/../Framework/Error.php';
+require_once dirname(__FILE__).'/../Framework/Error/Notice.php';
+require_once dirname(__FILE__).'/../Framework/Error/Warning.php';
+
 /**
  * Error handler that converts PHP errors and warnings to exceptions.
  *
