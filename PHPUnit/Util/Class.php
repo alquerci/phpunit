@@ -318,10 +318,6 @@ class PHPUnit_Util_Class
             throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'string');
         }
 
-        PHPUnit_Framework_Assert::assertObjectHasAttribute(
-          $attributeName, $object
-        );
-
         try {
             $attribute = new ReflectionProperty($object, $attributeName);
         }
@@ -353,30 +349,36 @@ class PHPUnit_Util_Class
             }
         }
 
-        if (!isset($attribute) || $attribute->isPublic()) {
-            return $object->$attributeName;
-        } else {
-            $array         = (array)$object;
-            $protectedName = "\0*\0" . $attributeName;
-
-            if (array_key_exists($protectedName, $array)) {
-                return $array[$protectedName];
+        if (isset($attribute)) {
+            if ($attribute == NULL || $attribute->isPublic()) {
+                return $object->$attributeName;
             } else {
-                $classes = self::getHierarchy(get_class($object));
+                $array         = (array)$object;
+                $protectedName = "\0*\0" . $attributeName;
 
-                foreach ($classes as $class) {
-                    $privateName = sprintf(
-                      "\0%s\0%s",
+                if (array_key_exists($protectedName, $array)) {
+                    return $array[$protectedName];
+                } else {
+                    $classes = self::getHierarchy(get_class($object));
 
-                      $class,
-                      $attributeName
-                    );
+                    foreach ($classes as $class) {
+                        $privateName = sprintf(
+                          "\0%s\0%s",
 
-                    if (array_key_exists($privateName, $array)) {
-                        return $array[$privateName];
+                          $class,
+                          $attributeName
+                        );
+
+                        if (array_key_exists($privateName, $array)) {
+                            return $array[$privateName];
+                        }
                     }
                 }
             }
+        }
+
+        else {
+            return $object->$attributeName;
         }
 
         throw new PHPUnit_Framework_Exception(
