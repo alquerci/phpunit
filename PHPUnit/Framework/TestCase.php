@@ -43,8 +43,6 @@
  * @since      File available since Release 2.0.0
  */
 
-require_once 'Text/Template.php';
-
 /**
  * A TestCase defines the fixture to run multiple tests.
  *
@@ -570,6 +568,13 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
                 $constants     = '';
                 $globals       = '';
                 $includedFiles = '';
+
+                if (!empty($GLOBALS['__PHPUNIT_BOOTSTRAP'])) {
+                    $globals .= sprintf(
+                        '$GLOBALS[__PHPUNIT_BOOTSTRAP] = %s;' . "\n",
+                        var_export($GLOBALS['__PHPUNIT_BOOTSTRAP'], true)
+                    );
+                }
             }
 
             if ($result->getCollectCodeCoverageInformation()) {
@@ -577,6 +582,8 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             } else {
                 $coverage = 'FALSE';
             }
+
+            $autoload = var_export(dirname(__FILE__).'/../../bootstrap.php', true);
 
             $data            = addcslashes(serialize($this->data), "'");
             $dependencyInput = addcslashes(
@@ -586,6 +593,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
 
             $template->setVar(
               array(
+                'autoload'                       => $autoload,
                 'filename'                       => $class->getFileName(),
                 'className'                      => $class->getName(),
                 'methodName'                     => $this->name,

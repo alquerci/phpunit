@@ -235,6 +235,55 @@ class PHPUnit_Util_Log_JSON extends PHPUnit_Util_Printer implements PHPUnit_Fram
      */
     public function write($buffer)
     {
-        parent::write(json_encode($buffer));
+        parent::write($this->encode($buffer));
+    }
+
+    /**
+     * @param  array $message
+     * @return string
+     */
+    private function encode($message)
+    {
+        if (function_exists('json_encode')) {
+            return json_encode($message);
+        }
+
+        $first  = TRUE;
+        $result = '';
+
+        if (is_scalar($message)) {
+            $message = array ($message);
+        }
+
+        foreach ($message as $key => $value) {
+            if (!$first) {
+                $result .= ',';
+            } else {
+                $first = FALSE;
+            }
+
+            $result .= sprintf('"%s":', $this->escape($key));
+
+            if (is_array($value) || is_object($value)) {
+                $result .= sprintf('%s', $this->encode($value));
+            } else {
+                $result .= sprintf('"%s"', $this->escape($value));
+            }
+        }
+
+        return '{' . $result . '}';
+    }
+
+    /**
+     * @param  string $value
+     * @return string
+     */
+    private function escape($value)
+    {
+        return str_replace(
+          array("\\",   "\"", "/",  "\b", "\f", "\n", "\r", "\t"),
+          array('\\\\', '\"', '\/', '\b', '\f', '\n', '\r', '\t'),
+          $value
+        );
     }
 }

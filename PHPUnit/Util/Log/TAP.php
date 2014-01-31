@@ -43,8 +43,6 @@
  * @since      File available since Release 3.0.0
  */
 
-require_once 'SymfonyComponents/YAML/sfYamlDumper.php';
-
 /**
  * A TestListener that generates a logfile of the
  * test execution using the Test Anything Protocol (TAP).

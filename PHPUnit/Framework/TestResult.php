@@ -43,9 +43,6 @@
  * @since      File available since Release 2.0.0
  */
 
-require_once 'PHP/CodeCoverage.php';
-require_once 'PHP/Timer.php';
-
 /**
  * A TestResult collects the results of executing a test case.
  *
@@ -807,7 +804,7 @@ class PHPUnit_Framework_TestResult implements Countable
      *
      * @param  boolean $flag
      * @throws InvalidArgumentException
-     * @since  Method available since Release 3.1.0
+     * @since  Method available since Release 3.5.0
      */
     public function stopOnSkipped($flag)
     {

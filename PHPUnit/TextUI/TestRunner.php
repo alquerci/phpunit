@@ -318,8 +318,6 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
                   'a moment.'
                 );
 
-                require_once 'PHP/CodeCoverage/Report/Clover.php';
-
                 $writer = new PHP_CodeCoverage_Report_Clover;
                 $writer->process(
                   $result->getCodeCoverage(), $arguments['coverageClover']
@@ -343,8 +341,6 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
                         $title = $loggingConfiguration['title'];
                     }
                 }
-
-                require_once 'PHP/CodeCoverage/Report/HTML.php';
 
                 $writer = new PHP_CodeCoverage_Report_HTML(
                   array(

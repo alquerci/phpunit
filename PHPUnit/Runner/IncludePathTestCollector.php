@@ -43,8 +43,6 @@
  * @since      File available since Release 2.1.0
  */
 
-require_once 'File/Iterator/Factory.php';
-
 /**
  * A test collector that collects tests from one or more directories
  * recursively. If no directories are specified, the include_path is searched.

@@ -267,6 +267,25 @@ class PHPUnit_Util_Class
                 return $attributes[$attributeName];
             }
 
+            if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+                // https://bugs.php.net/38132
+                if (version_compare(PHP_VERSION, '5.1.5', '<')) {
+                    $protectedName = "\0*\0" . $attributeName;
+                } else {
+                    $protectedName = '*' . $attributeName;
+                }
+
+                if (array_key_exists($protectedName, $attributes)) {
+                    return $attributes[$protectedName];
+                }
+
+                $privateName = "\0" . $class->getName() . "\0" . $attributeName;
+
+                if (array_key_exists($privateName, $attributes)) {
+                    return $attributes[$privateName];
+                }
+            }
+
             $class = $class->getParentClass();
         }
 
@@ -308,6 +327,19 @@ class PHPUnit_Util_Class
         }
 
         catch (ReflectionException $e) {
+            // Workaround for http://bugs.php.net/46064
+            if (version_compare(PHP_VERSION, '5.2.7', '<')) {
+                $reflector  = new ReflectionObject($object);
+                $attributes = $reflector->getProperties();
+
+                foreach ($attributes as $_attribute) {
+                    if ($_attribute->getName() == $attributeName) {
+                        $attribute = $_attribute;
+                        break;
+                    }
+                }
+            }
+
             $reflector = new ReflectionObject($object);
 
             while ($reflector = $reflector->getParentClass()) {
@@ -321,7 +353,7 @@ class PHPUnit_Util_Class
             }
         }
 
-        if ($attribute->isPublic()) {
+        if (!isset($attribute) || $attribute->isPublic()) {
             return $object->$attributeName;
         } else {
             $array         = (array)$object;

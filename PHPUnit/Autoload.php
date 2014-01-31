@@ -42,48 +42,68 @@
  * @since      File available since Release 3.5.0
  */
 
-require_once 'PHPUnit/Util/Filesystem.php';
-require_once 'PHP/CodeCoverage/Filter.php';
+/**
+ * PHPUnit autoloader
+ *
+ * @package    PHPUnit
+ * @author     Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2002-2010 Sebastian Bergmann <sebastian@phpunit.de>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    Release: @package_version@
+ * @link       http://www.phpunit.de/
+ * @since      Class available since Release 3.5.0
+ */
+final class PHPUnit_Autoload
+{
+    private static $loader;
 
-if (!function_exists('phpunit_autoload')) {
-    function phpunit_autoload($class)
+    public static function loadClassLoader($class)
     {
-        if (strpos($class, 'PHPUnit_') === 0) {
-            $file = str_replace('_', '/', $class) . '.php';
-            $file = PHPUnit_Util_Filesystem::fileExistsInIncludePath($file);
-
-            if ($file) {
-                require_once $file;
-            }
+        if ('PHPUnit_Util_ClassLoader' === $class) {
+            require dirname(__FILE__) . '/Util/ClassLoader.php';
         }
     }
 
-    spl_autoload_register('phpunit_autoload');
+    public static function loadClass($class)
+    {
+        return self::$loader->loadClass($class);
+    }
 
-    $dir    = dirname(__FILE__);
-    $filter = PHP_CodeCoverage_Filter::getInstance();
+    public static function findFile($class)
+    {
+        return self::$loader->findFile($class);
+    }
 
-    $filter->addDirectoryToBlacklist(
-      $dir . '/Extensions', '.php', '', 'PHPUNIT', FALSE
-    );
+    public static function getLoader()
+    {
+        if (null !== self::$loader) {
+            return self::$loader;
+        }
 
-    $filter->addDirectoryToBlacklist(
-      $dir . '/Framework', '.php', '', 'PHPUNIT', FALSE
-    );
+        spl_autoload_register(array(__CLASS__, 'loadClassLoader'), true);
+        self::$loader = $loader = new PHPUnit_Util_ClassLoader();
+        spl_autoload_unregister(array(__CLASS__, 'loadClassLoader'));
 
-    $filter->addDirectoryToBlacklist(
-      $dir . '/Runner', '.php', '', 'PHPUNIT', FALSE
-    );
+        $baseDir = dirname(dirname(__FILE__));
 
-    $filter->addDirectoryToBlacklist(
-      $dir . '/TextUI', '.php', '', 'PHPUNIT', FALSE
-    );
+        $map = array(
+            'PHPUnit_' => array($baseDir),
+            'Text_' => array($baseDir),
+            'PHP_' => array($baseDir),
+            'File_' => array($baseDir),
+        );
+        foreach ($map as $namespace => $path) {
+            $loader->set($namespace, $path);
+        }
 
-    $filter->addDirectoryToBlacklist(
-      $dir . '/Util', '.php', '', 'PHPUNIT', FALSE
-    );
+        $classMap = array(
+        );
+        if ($classMap) {
+            $loader->addClassMap($classMap);
+        }
 
-    $filter->addFileToBlacklist(__FILE__, 'PHPUNIT', FALSE);
+        spl_autoload_register(array(__CLASS__, 'loadClass'));
 
-    unset($dir, $filter);
+        return $loader;
+    }
 }

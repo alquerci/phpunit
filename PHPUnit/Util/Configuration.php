@@ -769,7 +769,7 @@ class PHPUnit_Util_Configuration
                 continue;
             }
 
-            $suite->addTestFile($file, $syntaxCheck);
+            $suite->addTestFile($this->toAbsolutePath($file), $syntaxCheck);
         }
 
         return $suite;

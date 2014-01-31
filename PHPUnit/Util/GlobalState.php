@@ -92,6 +92,9 @@ class PHPUnit_Util_GlobalState
       'HTTP_POST_FILES'
     );
 
+    protected static $isBackupGlobalsDone = false;
+    protected static $isBackupStaticAttributesDone = false;
+
     public static function backupGlobals(array $blacklist)
     {
         self::$globals     = array();
@@ -110,10 +113,16 @@ class PHPUnit_Util_GlobalState
                 self::$globals['GLOBALS'][$key] = serialize($GLOBALS[$key]);
             }
         }
+
+        self::$isBackupGlobalsDone = true;
     }
 
     public static function restoreGlobals(array $blacklist)
     {
+        if (false === self::$isBackupGlobalsDone) {
+           return;
+        }
+
         if (ini_get('register_long_arrays') == '1') {
             $superGlobalArrays = array_merge(
               self::$superGlobalArrays, self::$superGlobalArraysLong
@@ -143,6 +152,8 @@ class PHPUnit_Util_GlobalState
         }
 
         self::$globals = array();
+
+        self::$isBackupGlobalsDone = false;
     }
 
     protected static function backupSuperGlobalArray($superGlobalArray)
@@ -271,7 +282,8 @@ class PHPUnit_Util_GlobalState
         $declaredClassesNum     = count($declaredClasses);
 
         for ($i = $declaredClassesNum - 1; $i >= 0; $i--) {
-            if (strpos($declaredClasses[$i], 'PHPUnit') !== 0 &&
+            if ((strpos($declaredClasses[$i], 'PHPUnit') !== 0 ||
+                preg_match('/PHPUnit.*_Tests_/Ai', $declaredClasses[$i])) &&
                 !$declaredClasses[$i] instanceof PHPUnit_Framework_Test) {
                 $class = new ReflectionClass($declaredClasses[$i]);
 
@@ -298,10 +310,16 @@ class PHPUnit_Util_GlobalState
                 }
             }
         }
+
+        self::$isBackupStaticAttributesDone = true;
     }
 
     public static function restoreStaticAttributes()
     {
+        if (false === self::$isBackupStaticAttributesDone) {
+            return;
+        }
+
         foreach (self::$staticAttributes as $className => $staticAttributes) {
             foreach ($staticAttributes as $name => $value) {
                 $reflector = new ReflectionProperty($className, $name);
@@ -311,6 +329,8 @@ class PHPUnit_Util_GlobalState
         }
 
         self::$staticAttributes = array();
+
+        self::$isBackupStaticAttributesDone = false;
     }
 
     protected static function exportVariable($variable)

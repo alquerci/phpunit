@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit backupGlobals="false">
+<phpunit backupGlobals="false"
+         bootstrap="bootstrap.php"
+>
   <php>
     <const name="PHPUNIT_TESTSUITE" value="true"/>
   </php>
 
   <testsuites>
     <testsuite name="PHPUnit">
-      <directory suffix="Test.php">Tests/Framework</directory>
-      <directory suffix=".phpt">Tests/Framework/MockObject</directory>
-      <directory suffix="Test.php">Tests/Extensions</directory>
-      <directory suffix=".phpt">Tests/Regression</directory>
-      <directory suffix="Test.php">Tests/Runner</directory>
-      <directory suffix=".phpt">Tests/TextUI</directory>
-      <directory suffix="Test.php">Tests/Util</directory>
+      <directory suffix="Test.php">PHPUnit/Tests/Framework</directory>
+      <directory suffix="Test.php">PHPUnit/Tests/Extensions</directory>
+      <directory suffix="Test.php">PHPUnit/Tests/Runner</directory>
+      <directory suffix="Test.php">PHPUnit/Tests/Util</directory>
+    </testsuite>
+    <testsuite name="Samples Test Suite">
+      <directory suffix="Test.php">PHPUnit/Samples/*/Tests</directory>
     </testsuite>
   </testsuites>
 
@@ -26,12 +28,16 @@
   </logging>
 
   <filter>
-    <whitelist addUncoveredFilesFromWhitelist="true">
+    <whitelist>
       <directory suffix=".php">PHPUnit/Extensions</directory>
       <directory suffix=".php">PHPUnit/Framework</directory>
       <directory suffix=".php">PHPUnit/Runner</directory>
       <directory suffix=".php">PHPUnit/TextUI</directory>
       <directory suffix=".php">PHPUnit/Util</directory>
+      <directory suffix=".php">PHPUnit/Samples</directory>
+      <exclude>
+        <directory>PHPUnit/Samples/*/Tests</directory>
+      </exclude>
     </whitelist>
   </filter>
 </phpunit>

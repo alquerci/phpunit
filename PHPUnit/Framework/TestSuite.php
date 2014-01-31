@@ -43,8 +43,6 @@
  * @since      File available since Release 2.0.0
  */
 
-require_once 'PHP/CodeCoverage.php';
-
 /**
  * A TestSuite is a composite of Tests. It runs a collection of test cases.
  *
@@ -220,7 +218,8 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
         }
 
         foreach ($theClass->getMethods() as $method) {
-            if (strpos($method->getDeclaringClass()->getName(), 'PHPUnit_') !== 0) {
+            if (strpos($method->getDeclaringClass()->getName(), 'PHPUnit_') !== 0 ||
+                preg_match('/PHPUnit.*_Tests_/Ai', $method->getDeclaringClass()->getName())) {
                 $this->addTestMethod($theClass, $method);
             }
         }
