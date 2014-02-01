@@ -6,7 +6,7 @@ $_SERVER['argv'][1] = '--no-configuration';
 $_SERVER['argv'][2] = '--log-json';
 $_SERVER['argv'][3] = 'php://stdout';
 $_SERVER['argv'][4] = 'BankAccountTest';
-$_SERVER['argv'][5] = dirname(__FILE__).'../Fixtures/BankAccountTest.php';
+$_SERVER['argv'][5] = dirname(__FILE__).'/../Fixtures/BankAccountTest.php';
 
 require_once dirname(dirname(dirname(dirname(__FILE__)))) . '/bootstrap.php';
 PHPUnit_TextUI_Command::main();

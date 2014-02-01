@@ -103,7 +103,7 @@ class PHPUnit_Tests_Fixtures_BankAccountTest extends PHPUnit_Framework_TestCase
             $this->ba->depositMoney(-1);
         }
 
-        catch (BankAccountException $e) {
+        catch (PHPUnit_Tests_Fixtures_BankAccountException $e) {
             $this->assertEquals(0, $this->ba->getBalance());
 
             return;
