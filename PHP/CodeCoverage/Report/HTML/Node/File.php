@@ -64,6 +64,11 @@ class PHP_CodeCoverage_Report_HTML_Node_File extends PHP_CodeCoverage_Report_HTM
     /**
      * @var array
      */
+    protected $ignoredLines;
+
+    /**
+     * @var array
+     */
     protected $codeLines;
 
     /**
@@ -167,6 +172,24 @@ class PHP_CodeCoverage_Report_HTML_Node_File extends PHP_CodeCoverage_Report_HTM
                                );
 
         $this->calculateStatistics();
+    }
+
+    /**
+     * Returns the code coverage data of this node.
+     *
+     * @return array
+     */
+    public function getCoverageData()
+    {
+        return $this->executedLines;
+    }
+
+    /**
+     * @return array
+     */
+    public function getIgnoredLines()
+    {
+        return $this->ignoredLines;
     }
 
     /**
@@ -853,6 +876,7 @@ class PHP_CodeCoverage_Report_HTML_Node_File extends PHP_CodeCoverage_Report_HTM
             $this->classes[$className] = array(
               'methods'         => array(),
               'startLine'       => $class['startLine'],
+              'endLine'         => $class['endLine'],
               'executableLines' => 0,
               'executedLines'   => 0,
               'ccn'             => 0,
@@ -868,6 +892,7 @@ class PHP_CodeCoverage_Report_HTML_Node_File extends PHP_CodeCoverage_Report_HTM
                 $this->classes[$className]['methods'][$methodName] = array(
                   'signature'       => $method['signature'],
                   'startLine'       => $method['startLine'],
+                  'endLine'         => $method['endLine'],
                   'executableLines' => 0,
                   'executedLines'   => 0,
                   'ccn'             => $method['ccn'],
@@ -892,6 +917,7 @@ class PHP_CodeCoverage_Report_HTML_Node_File extends PHP_CodeCoverage_Report_HTM
             $this->classes['*'] = array(
               'methods'         => array(),
               'startLine'       => 0,
+              'endLine'         => 0,
               'executableLines' => 0,
               'executedLines'   => 0,
               'ccn'             => 0
@@ -902,6 +928,7 @@ class PHP_CodeCoverage_Report_HTML_Node_File extends PHP_CodeCoverage_Report_HTM
             $this->classes['*']['methods'][$functionName] = array(
               'signature'       => $function['signature'],
               'startLine'       => $function['startLine'],
+              'endLine'         => $function['endLine'],
               'executableLines' => 0,
               'executedLines'   => 0,
               'ccn'             => $function['ccn']

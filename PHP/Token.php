@@ -117,7 +117,7 @@ abstract class PHP_TokenWithScope extends PHP_Token
         for ($i = $this->id - 2; $i > $this->id - 6; $i -= 2) {
             if (isset($tokens[$i]) &&
                 $tokens[$i] instanceof PHP_Token_DOC_COMMENT) {
-                return (string)$tokens[$i];
+                return (string)$tokens[$i]->__toString();
             }
         }
     }
@@ -254,11 +254,11 @@ class PHP_Token_FUNCTION extends PHP_TokenWithScope
 
         while (!$tokens[$i] instanceof PHP_Token_CLOSE_BRACKET) {
             if ($tokens[$i] instanceof PHP_Token_STRING) {
-                $typeHint = (string)$tokens[$i];
+                $typeHint = (string)$tokens[$i]->__toString();
             }
 
             else if ($tokens[$i] instanceof PHP_Token_VARIABLE) {
-                $this->arguments[(string)$tokens[$i]] = $typeHint;
+                $this->arguments[(string)$tokens[$i]->__toString()] = $typeHint;
                 $typeHint                             = NULL;
             }
 
@@ -277,12 +277,12 @@ class PHP_Token_FUNCTION extends PHP_TokenWithScope
         $tokens = $this->tokenStream->tokens();
 
         if ($tokens[$this->id+2] instanceof PHP_Token_STRING) {
-            $this->name = (string)$tokens[$this->id+2];
+            $this->name = (string)$tokens[$this->id+2]->__toString();
         }
 
         else if ($tokens[$this->id+2] instanceof PHP_Token_AMPERSAND &&
                  $tokens[$this->id+3] instanceof PHP_Token_STRING) {
-            $this->name = (string)$tokens[$this->id+3];
+            $this->name = (string)$tokens[$this->id+3]->__toString();
         }
 
         else {
@@ -371,7 +371,7 @@ class PHP_Token_INTERFACE extends PHP_TokenWithScope
 
     public function getName()
     {
-        return (string)$this->tokenStream[$this->id + 2];
+        return (string)$this->tokenStream[$this->id + 2]->__toString();
     }
 
     public function hasParent()
@@ -387,10 +387,10 @@ class PHP_Token_INTERFACE extends PHP_TokenWithScope
 
         $i         = $this->id + 6;
         $tokens    = $this->tokenStream->tokens();
-        $className = (string)$tokens[$i];
+        $className = (string)$tokens[$i]->__toString();
 
         while (!$tokens[$i+1] instanceof PHP_Token_WHITESPACE) {
-            $className .= (string)$tokens[++$i];
+            $className .= (string)$tokens[++$i]->__toString();
         }
 
         return $className;
@@ -422,7 +422,7 @@ class PHP_Token_INTERFACE extends PHP_TokenWithScope
         while (!$tokens[$i+1] instanceof PHP_Token_OPEN_CURLY) {
             $i++;
             if ($tokens[$i] instanceof PHP_Token_STRING) {
-                $this->interfaces[] = (string)$tokens[$i];
+                $this->interfaces[] = (string)$tokens[$i]->__toString();
             }
         }
         return $this->interfaces;
@@ -458,7 +458,7 @@ class PHP_Token_NAMESPACE extends PHP_Token
     public function getName()
     {
         $tokens    = $this->tokenStream->tokens();
-        $namespace = (string)$tokens[$this->id+2];
+        $namespace = (string)$tokens[$this->id+2]->__toString();
 
         for ($i = $this->id + 3; ; $i += 2) {
             if (isset($tokens[$i]) &&

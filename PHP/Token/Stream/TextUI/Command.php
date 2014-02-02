@@ -129,7 +129,7 @@ class PHP_Token_Stream_TextUI_Command
             if ($token instanceof PHP_Token_WHITESPACE) {
                 $text = '';
             } else {
-                $text = str_replace(array("\r", "\n"), '', (string)$token);
+                $text = str_replace(array("\r", "\n"), '', (string)$token->__toString());
 
                 if (strlen($text) > 40) {
                     $text = explode("\n", wordwrap($text, 40));

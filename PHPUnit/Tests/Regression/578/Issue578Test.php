@@ -1,5 +1,4 @@
 <?php
-
 class PHPUnit_Tests_Regression_578_Issue578Test extends PHPUnit_Framework_TestCase
 {
     public function testNoticesDoublePrintStackTrace()

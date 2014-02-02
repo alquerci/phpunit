@@ -3,6 +3,6 @@ class PHPUnit_Tests_Fixtures_ThrowExceptionTestCase extends PHPUnit_Framework_Te
 {
     public function test()
     {
-        throw new Exception;
+        throw new RuntimeException;
     }
 }

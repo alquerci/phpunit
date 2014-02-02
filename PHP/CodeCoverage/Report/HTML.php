@@ -72,35 +72,15 @@ class PHP_CodeCoverage_Report_HTML
      *
      * @param array $options
      */
-    public function __construct(array $options = array())
+    public function __construct($title = '', $charset = 'UTF-8', $yui = TRUE, $highlight = FALSE, $lowUpperBound = 35, $highLowerBound = 70, $generator = '')
     {
-        if (!isset($options['title'])) {
-            $options['title'] = '';
-        }
-
-        if (!isset($options['charset'])) {
-            $options['charset'] = 'UTF-8';
-        }
-
-        if (!isset($options['yui'])) {
-            $options['yui'] = TRUE;
-        }
-
-        if (!isset($options['highlight'])) {
-            $options['highlight'] = FALSE;
-        }
-
-        if (!isset($options['lowUpperBound'])) {
-            $options['lowUpperBound'] = 35;
-        }
-
-        if (!isset($options['highLowerBound'])) {
-            $options['highLowerBound'] = 70;
-        }
-
-        if (!isset($options['generator'])) {
-            $options['generator'] = '';
-        }
+        $options['charset'] = $charset;
+        $options['generator'] = $generator;
+        $options['highLowerBound'] = $highLowerBound;
+        $options['highlight'] = $highlight;
+        $options['lowUpperBound'] = $lowUpperBound;
+        $options['title'] = $title;
+        $options['yui'] = $yui;
 
         $this->options = $options;
 
@@ -108,6 +88,7 @@ class PHP_CodeCoverage_Report_HTML
           '%s%sHTML%sTemplate%s',
 
           dirname(__FILE__),
+          DIRECTORY_SEPARATOR,
           DIRECTORY_SEPARATOR,
           DIRECTORY_SEPARATOR,
           DIRECTORY_SEPARATOR

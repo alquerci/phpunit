@@ -66,4 +66,11 @@ class PHPUnit_Tests_Fixtures_FailureTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(1.0, 1.5, 'message');
     }
+
+    // Note that due to the implementation of this assertion it counts as 2 asserts
+    public function testAssertStringMatchesFormatFile()
+    {
+        $this->assertStringMatchesFormatFile(dirname(__FILE__) . '/expectedFileFormat.txt', '...BAR...');
+    }
+
 }

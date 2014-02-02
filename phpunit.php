@@ -2,7 +2,7 @@
 <?php
 /* PHPUnit
  *
- * Copyright (c) 2002-2011, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2012, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,10 +35,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once dirname(__FILE__).'/bootstrap.php';
-
-PHP_CodeCoverage_Filter::getInstance()->addFileToBlacklist(__FILE__, 'PHPUNIT');
-
 define('PHPUnit_MAIN_METHOD', 'PHPUnit_TextUI_Command::main');
+
+require_once dirname(__FILE__).'/bootstrap.php';
 
 PHPUnit_TextUI_Command::main();

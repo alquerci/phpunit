@@ -70,6 +70,11 @@ class PHP_CodeCoverage
     /**
      * @var boolean
      */
+    protected $cacheTokens = TRUE;
+
+    /**
+     * @var boolean
+     */
     protected $forceCoversAnnotation = FALSE;
 
     /**
@@ -166,6 +171,10 @@ class PHP_CodeCoverage
             $this->isCodeCoverageTestSuite = TRUE;
         }
 
+        if (!defined('PHPUNIT_TESTSUITE')) {
+            $this->filter->addFilesToBlacklist(PHPUnit_Util_GlobalState::phpunitFiles(), 'PHPUNIT');
+        }
+
         if (defined('FILE_ITERATOR_TESTSUITE')) {
             $this->isFileIteratorTestSuite = TRUE;
         }
@@ -177,6 +186,64 @@ class PHP_CodeCoverage
         if (defined('PHP_TOKENSTREAM_TESTSUITE')) {
             $this->isTokenStreamTestSuite = TRUE;
         }
+    }
+
+    /**
+     * Returns the PHP_CodeCoverage_Report_Node_* object graph
+     * for this PHP_CodeCoverage object.
+     *
+     * @return PHP_CodeCoverage_Report_Node_Directory
+     * @since Method available since Release 1.1.0
+     */
+    public function getReport()
+    {
+        $files      = $this->getSummary();
+        $commonPath = PHP_CodeCoverage_Util::reducePaths($files);
+        $items      = PHP_CodeCoverage_Util::buildDirectoryStructure($files);
+        $root       = new PHP_CodeCoverage_Report_HTML_Node_Directory(
+                        $commonPath, NULL
+                      );
+
+        $this->addItems($root, $items);
+
+        return $root;
+    }
+
+    private function addItems(PHP_CodeCoverage_Report_HTML_Node_Directory $root, array $items)
+    {
+        foreach ($items as $key => $value) {
+            if (substr($key, -2) == '/f') {
+                $key = substr($key, 0, -2);
+
+                if (file_exists($root->getPath() . DIRECTORY_SEPARATOR . $key)) {
+                    $root->addFile($key, $value, FALSE, FALSE);
+                }
+            } else {
+                $child = $root->addDirectory($key);
+                $this->addItems($child, $value);
+            }
+        }
+    }
+
+    /**
+     * Returns the collected code coverage data.
+     *
+     * @return array
+     * @since Method available since Release 1.1.0
+     */
+    public function getData()
+    {
+        if ($this->processUncoveredFilesFromWhitelist) {
+            $this->processUncoveredFilesFromWhitelist();
+        }
+
+        // We need to apply the blacklist filter a second time
+        // when no whitelist is used.
+        if (!$this->filter->hasWhitelist()) {
+            $this->applyListsFilter($this->data);
+        }
+
+        return $this->data;
     }
 
     /**
@@ -321,6 +388,20 @@ class PHP_CodeCoverage
         );
 
         $this->summary = array();
+    }
+
+    /**
+     * @param boolean $flag
+     * @throws InvalidArgumentException
+     * @since Method available since Release 1.1.0
+     */
+    public function setCacheTokens($flag)
+    {
+        if (!is_bool($flag)) {
+            throw new InvalidArgumentException;
+        }
+
+        $this->cacheTokens = $flag;
     }
 
     /**

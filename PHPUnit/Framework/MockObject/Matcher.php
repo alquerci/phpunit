@@ -185,7 +185,7 @@ class PHPUnit_Framework_MockObject_Matcher implements PHPUnit_Framework_MockObje
 
                 $this->methodNameMatcher->toString(),
                 $this->invocationMatcher->toString(),
-                $e->getDescription()
+                $e->getMessage()
               ),
               $e->getComparisonFailure()
             );
@@ -257,7 +257,7 @@ class PHPUnit_Framework_MockObject_Matcher implements PHPUnit_Framework_MockObje
 
                 $this->methodNameMatcher->toString(),
                 $this->invocationMatcher->toString(),
-                $e->getDescription()
+                $e->getMessage()
               ),
               $e->getComparisonFailure()
             );

@@ -2,7 +2,7 @@
 /**
  * PHPUnit
  *
- * Copyright (c) 2002-2011, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2012, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  * @package    PHPUnit
  * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.phpunit.de/
  * @since      File available since Release 3.1.0
@@ -53,7 +53,7 @@ if (!defined('T_NAMESPACE')) {
  * @package    PHPUnit
  * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
@@ -146,13 +146,21 @@ class PHPUnit_Util_Class
                 $name .= 'arg' . $i;
             }
 
-            $default  = '';
-            $typeHint = '';
+            $default   = '';
+            $reference = '';
+            $typeHint  = '';
 
             if (!$forCall) {
                 if ($parameter->isArray()) {
                     $typeHint = 'array ';
-                } else {
+                }
+
+                else if (version_compare(PHP_VERSION, '5.4', '>') &&
+                         $parameter->isCallable()) {
+                    $typeHint = 'callable ';
+                }
+
+                else {
                     try {
                         $class = $parameter->getClass();
                     }
@@ -174,15 +182,13 @@ class PHPUnit_Util_Class
                 else if ($parameter->isOptional()) {
                     $default = ' = null';
                 }
+
+                if ($parameter->isPassedByReference()) {
+                    $reference = '&';
+                }
             }
 
-            $ref = '';
-
-            if ($parameter->isPassedByReference()) {
-                $ref = '&';
-            }
-
-            $parameters[] = $typeHint . $ref . $name . $default;
+            $parameters[] = $typeHint . $reference . $name . $default;
         }
 
         return join(', ', $parameters);

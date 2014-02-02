@@ -1,6 +1,6 @@
 <?php
 
-class PHPUnit_Tests_Fixtures_OutputTestCase extends PHPUnit_Extensions_OutputTestCase
+class PHPUnit_Tests_Fixtures_OutputTestCase extends PHPUnit_Framework_TestCase
 {
     public function testExpectOutputStringFooActualFoo()
     {

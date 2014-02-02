@@ -18,6 +18,6 @@ class PHPUnit_Tests_Regression_1021_Issue1021Test extends PHPUnit_Framework_Test
 
     public function provider()
     {
-        return array(array(true));
+        return array(array(TRUE));
     }
 }

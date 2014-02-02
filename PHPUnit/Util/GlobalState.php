@@ -2,7 +2,7 @@
 /**
  * PHPUnit
  *
- * Copyright (c) 2002-2011, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2012, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  * @package    PHPUnit
  * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.phpunit.de/
  * @since      File available since Release 3.4.0
@@ -49,7 +49,7 @@
  * @package    PHPUnit
  * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
@@ -95,6 +95,11 @@ class PHPUnit_Util_GlobalState
     protected static $isBackupGlobalsDone = false;
     protected static $isBackupStaticAttributesDone = false;
 
+    /**
+     * @var array
+     */
+    protected static $phpunitFiles;
+
     public static function backupGlobals(array $blacklist)
     {
         self::$globals     = array();
@@ -109,7 +114,8 @@ class PHPUnit_Util_GlobalState
         foreach (array_keys($GLOBALS) as $key) {
             if ($key != 'GLOBALS' &&
                 !in_array($key, $superGlobalArrays) &&
-                !in_array($key, $blacklist)) {
+                !in_array($key, $blacklist) &&
+                !$GLOBALS[$key] instanceof Closure) {
                 self::$globals['GLOBALS'][$key] = serialize($GLOBALS[$key]);
             }
         }
@@ -195,8 +201,7 @@ class PHPUnit_Util_GlobalState
 
     public static function getIncludedFilesAsString()
     {
-        $blacklist = PHP_CodeCoverage::getInstance()->filter()->getBlacklist();
-        $blacklist = array_flip($blacklist['PHPUNIT']);
+        $blacklist = self::phpunitFiles();
         $files     = get_included_files();
         $result    = '';
 
@@ -237,6 +242,10 @@ class PHPUnit_Util_GlobalState
             if (isset($GLOBALS[$superGlobalArray]) &&
                 is_array($GLOBALS[$superGlobalArray])) {
                 foreach (array_keys($GLOBALS[$superGlobalArray]) as $key) {
+                    if ($GLOBALS[$superGlobalArray][$key] instanceof Closure) {
+                        continue;
+                    }
+
                     $result .= sprintf(
                       '$GLOBALS[\'%s\'][\'%s\'] = %s;' . "\n",
                       $superGlobalArray,
@@ -252,7 +261,7 @@ class PHPUnit_Util_GlobalState
         $blacklist[] = '_PEAR_Config_instance';
 
         foreach (array_keys($GLOBALS) as $key) {
-            if (!in_array($key, $blacklist)) {
+            if (!in_array($key, $blacklist) && !$GLOBALS[$key] instanceof Closure) {
                 $result .= sprintf(
                   '$GLOBALS[\'%s\'] = %s;' . "\n",
                   $key,
@@ -286,6 +295,7 @@ class PHPUnit_Util_GlobalState
                 '/PHPUnit(?!.*_Tests_)/Ai',
                 '/File_Iterator(?!.*_Tests_)/Ai',
                 '/PHP_CodeCoverage(?!.*_Tests_)/Ai',
+                '/PHP_Invoker(?!.*_Tests_)/Ai',
                 '/PHP_Timer(?!.*_Tests_)/Ai',
                 '/PHP_TokenStream(?!.*_Tests_)/Ai',
                 '/sfYaml(?!.*_Tests_)/Ai',
@@ -314,7 +324,11 @@ class PHPUnit_Util_GlobalState
                         if (!isset($blacklist[$declaredClasses[$i]]) ||
                            !in_array($name, $blacklist[$declaredClasses[$i]])) {
                             $attribute->setAccessible(TRUE);
-                            $backup[$name] = serialize($attribute->getValue());
+                            $value = $attribute->getValue();
+
+                            if (!$value instanceof Closure) {
+                                $backup[$name] = serialize($value);
+                            }
                         }
                     }
                 }
@@ -378,5 +392,38 @@ class PHPUnit_Util_GlobalState
         }
 
         return $result;
+    }
+
+    /**
+     * @return array
+     * @since  Method available since Release 3.6.0
+     */
+    public static function phpunitFiles()
+    {
+        if (self::$phpunitFiles === NULL) {
+            $baseDir = dirname(dirname(dirname(__FILE__)));
+
+            $paths = array(
+                $baseDir . DIRECTORY_SEPARATOR . 'PHPUnit',
+                $baseDir . DIRECTORY_SEPARATOR . 'Text',
+                $baseDir . DIRECTORY_SEPARATOR . 'PHP',
+                $baseDir . DIRECTORY_SEPARATOR . 'File',
+            );
+
+            $exludes = array();
+
+            foreach ($paths as $path) {
+                $exludes[] = $path . DIRECTORY_SEPARATOR . 'Tests';
+            }
+
+            $finder = new File_Iterator_Facade();
+            self::$phpunitFiles = $finder->getFilesAsArray(
+                $paths, array(), array(), $exludes
+            );
+
+            self::$phpunitFiles = array_flip(self::$phpunitFiles);
+        }
+
+        return self::$phpunitFiles;
     }
 }

@@ -2,7 +2,7 @@
 /**
  * PHPUnit
  *
- * Copyright (c) 2002-2011, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2012, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
  *
  * @package    PHPUnit
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.phpunit.de/
  * @since      File available since Release 3.3.6
@@ -47,44 +47,97 @@
  *
  * @package    PHPUnit
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 3.3.6
  */
-class PHPUnit_Tests_Util_TestTest extends PHPUnit_Framework_TestCase
+class Util_TestTest extends PHPUnit_Framework_TestCase
 {
     public function testGetExpectedException()
     {
-        $this->assertEquals(
-          array('class' => 'FooBarBaz', 'code' => 0, 'message' => ''),
+        $this->assertSame(
+          array('class' => 'FooBarBaz', 'code' => NULL, 'message' => ''),
           PHPUnit_Util_Test::getExpectedException('PHPUnit_Tests_Fixtures_ExceptionTest', 'testOne')
         );
 
-        $this->assertEquals(
-          array('class' => 'Foo_Bar_Baz', 'code' => 0, 'message' => ''),
+        $this->assertSame(
+          array('class' => 'Foo_Bar_Baz', 'code' => NULL, 'message' => ''),
           PHPUnit_Util_Test::getExpectedException('PHPUnit_Tests_Fixtures_ExceptionTest', 'testTwo')
         );
 
-        $this->assertEquals(
-          array('class' => 'Foo\Bar\Baz', 'code' => 0, 'message' => ''),
+        $this->assertSame(
+          array('class' => 'Foo\Bar\Baz', 'code' => NULL, 'message' => ''),
           PHPUnit_Util_Test::getExpectedException('PHPUnit_Tests_Fixtures_ExceptionTest', 'testThree')
         );
 
-        $this->assertEquals(
-          array('class' => 'ほげ', 'code' => 0, 'message' => ''),
+        $this->assertSame(
+          array('class' => 'ほげ', 'code' => NULL, 'message' => ''),
           PHPUnit_Util_Test::getExpectedException('PHPUnit_Tests_Fixtures_ExceptionTest', 'testFour')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
           array('class' => 'Class', 'code' => 1234, 'message' => 'Message'),
           PHPUnit_Util_Test::getExpectedException('PHPUnit_Tests_Fixtures_ExceptionTest', 'testFive')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
           array('class' => 'Class', 'code' => 1234, 'message' => 'Message'),
           PHPUnit_Util_Test::getExpectedException('PHPUnit_Tests_Fixtures_ExceptionTest', 'testSix')
+        );
+
+        $this->assertSame(
+          array('class' => 'Class', 'code' => 'ExceptionCode', 'message' => 'Message'),
+          PHPUnit_Util_Test::getExpectedException('PHPUnit_Tests_Fixtures_ExceptionTest', 'testSeven')
+        );
+
+        $this->assertSame(
+          array('class' => 'Class', 'code' => 0, 'message' => 'Message'),
+          PHPUnit_Util_Test::getExpectedException('PHPUnit_Tests_Fixtures_ExceptionTest', 'testEight')
+        );
+   }
+
+    public function testGetRequirements()
+    {
+        $this->assertEquals(
+          array(),
+          PHPUnit_Util_Test::getRequirements('PHPUnit_Tests_Fixtures_RequirementsTest', 'testOne')
+        );
+
+        $this->assertEquals(
+          array('PHPUnit' => '1.0'),
+          PHPUnit_Util_Test::getRequirements('PHPUnit_Tests_Fixtures_RequirementsTest', 'testTwo')
+        );
+
+        $this->assertEquals(
+          array('PHP' => '2.0'),
+          PHPUnit_Util_Test::getRequirements('PHPUnit_Tests_Fixtures_RequirementsTest', 'testThree')
+        );
+
+        $this->assertEquals(
+          array('PHPUnit'=>'2.0', 'PHP' => '1.0'),
+          PHPUnit_Util_Test::getRequirements('PHPUnit_Tests_Fixtures_RequirementsTest', 'testFour')
+        );
+
+        $this->assertEquals(
+          array('PHP' => '5.4.0RC6'),
+          PHPUnit_Util_Test::getRequirements('PHPUnit_Tests_Fixtures_RequirementsTest', 'testFive')
+        );
+
+        $this->assertEquals(
+          array('PHP' => '5.4.0-alpha1'),
+          PHPUnit_Util_Test::getRequirements('PHPUnit_Tests_Fixtures_RequirementsTest', 'testSix')
+        );
+
+        $this->assertEquals(
+          array('PHP' => '5.4.0beta2'),
+          PHPUnit_Util_Test::getRequirements('PHPUnit_Tests_Fixtures_RequirementsTest', 'testSeven')
+        );
+
+        $this->assertEquals(
+          array('PHP' => '5.4-dev'),
+          PHPUnit_Util_Test::getRequirements('PHPUnit_Tests_Fixtures_RequirementsTest', 'testEight')
         );
     }
 
@@ -123,5 +176,20 @@ class PHPUnit_Tests_Util_TestTest extends PHPUnit_Framework_TestCase
      * @depends Foo
      * @depends ほげ
      */
-    public function methodForTestParseAnnotation() {}
+    public function methodForTestParseAnnotation()
+    {
+    }
+
+    public function testParseAnnotationThatIsOnlyOneLine()
+    {
+        $this->assertEquals(
+          array('Bar'),
+          PHPUnit_Util_Test::getDependencies(get_class($this), 'methodForTestParseAnnotationThatIsOnlyOneLine')
+        );
+    }
+
+    /** @depends Bar */
+    public function methodForTestParseAnnotationThatIsOnlyOneLine()
+    {
+    }
 }

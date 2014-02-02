@@ -2,6 +2,8 @@
 phpunit --process-isolation --exclude-group balanceIsInitiallyZero BankAccountTest ../Fixtures/BankAccountTest.php
 --FILE--
 <?php
+define('PHPUNIT_TESTSUITE', TRUE);
+
 $_SERVER['argv'][1] = '--no-configuration';
 $_SERVER['argv'][2] = '--process-isolation';
 $_SERVER['argv'][3] = '--exclude-group';

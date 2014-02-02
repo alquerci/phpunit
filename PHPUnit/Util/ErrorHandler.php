@@ -2,7 +2,7 @@
 /**
  * PHPUnit
  *
- * Copyright (c) 2002-2011, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2012, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  * @package    PHPUnit
  * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.phpunit.de/
  * @since      File available since Release 2.3.0
@@ -48,6 +48,7 @@
 require_once dirname(__FILE__).'/../Framework/Error.php';
 require_once dirname(__FILE__).'/../Framework/Error/Notice.php';
 require_once dirname(__FILE__).'/../Framework/Error/Warning.php';
+require_once dirname(__FILE__).'/../Framework/Error/Deprecated.php';
 
 /**
  * Error handler that converts PHP errors and warnings to exceptions.
@@ -55,7 +56,7 @@ require_once dirname(__FILE__).'/../Framework/Error/Warning.php';
  * @package    PHPUnit
  * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
@@ -118,6 +119,14 @@ class PHPUnit_Util_ErrorHandler
             }
 
             $exception = 'PHPUnit_Framework_Error_Warning';
+        }
+
+        else if (version_compare(PHP_VERSION, '5.3', '>=') && ($errno == E_DEPRECATED || $errno == E_USER_DEPRECATED)) {
+            if (PHPUnit_Framework_Error_Deprecated::$enabled !== TRUE) {
+                return FALSE;
+            }
+
+            $exception = 'PHPUnit_Framework_Error_Deprecated';
         }
 
         else {

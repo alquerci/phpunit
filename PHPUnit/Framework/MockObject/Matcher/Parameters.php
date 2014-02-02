@@ -147,18 +147,16 @@ class PHPUnit_Framework_MockObject_Matcher_Parameters extends PHPUnit_Framework_
         }
 
         foreach ($this->parameters as $i => $parameter) {
-            if (!$parameter->evaluate($this->invocation->parameters[$i])) {
-                $parameter->fail(
-                  $this->invocation->parameters[$i],
-                  sprintf(
-                    'Parameter %s for invocation %s does not match expected ' .
-                    'value.',
+            $parameter->evaluate(
+              $this->invocation->parameters[$i],
+              sprintf(
+                'Parameter %s for invocation %s does not match expected ' .
+                'value.',
 
-                    $i,
-                    $this->invocation->toString()
-                  )
-                );
-            }
+                $i,
+                $this->invocation->toString()
+              )
+            );
         }
     }
 }

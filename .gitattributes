@@ -1,1 +1,2 @@
-*.bat        eol=crlf
+*.bat eol=crlf
+*.php diff=php

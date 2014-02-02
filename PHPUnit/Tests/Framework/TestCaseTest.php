@@ -2,7 +2,7 @@
 /**
  * PHPUnit
  *
- * Copyright (c) 2002-2011, Sebastian Bergmann <sebastian@phpunit.de>.
+ * Copyright (c) 2001-2012, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
  *
  * @package    PHPUnit
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.phpunit.de/
  * @since      File available since Release 2.0.0
@@ -57,7 +57,7 @@ $GLOBALS['i']  = 'i';
  *
  * @package    PHPUnit
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2001-2012 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
@@ -189,7 +189,7 @@ class PHPUnit_Tests_Framework_TestCaseTest extends PHPUnit_Framework_TestCase
     public function testException()
     {
         $test = new PHPUnit_Tests_Fixtures_ThrowExceptionTestCase('test');
-        $test->setExpectedException('Exception');
+        $test->setExpectedException('RuntimeException');
 
         $result = $test->run();
 
@@ -200,7 +200,7 @@ class PHPUnit_Tests_Framework_TestCaseTest extends PHPUnit_Framework_TestCase
     public function testNoException()
     {
         $test = new PHPUnit_Tests_Fixtures_ThrowNoExceptionTestCase('test');
-        $test->setExpectedException('Exception');
+        $test->setExpectedException('RuntimeException');
 
         $result = $test->run();
 
@@ -211,11 +211,11 @@ class PHPUnit_Tests_Framework_TestCaseTest extends PHPUnit_Framework_TestCase
     public function testWrongException()
     {
         $test = new PHPUnit_Tests_Fixtures_ThrowExceptionTestCase('test');
-        $test->setExpectedException('RuntimeException');
+        $test->setExpectedException('InvalidArgumentException');
 
         $result = $test->run();
 
-        $this->assertEquals(1, $result->errorCount());
+        $this->assertEquals(1, $result->failureCount());
         $this->assertEquals(1, count($result));
     }
 
@@ -311,5 +311,65 @@ class PHPUnit_Tests_Framework_TestCaseTest extends PHPUnit_Framework_TestCase
         }
 
         $this->assertNotSame($GLOBALS['singleton'], PHPUnit_Tests_Fixtures_Singleton::getInstance());
+    }
+
+    public function testExpectOutputStringFooActualFoo()
+    {
+        $test   = new PHPUnit_Tests_Fixtures_OutputTestCase('testExpectOutputStringFooActualFoo');
+        $result = $test->run();
+
+        $this->assertEquals(1, count($result));
+        $this->assertTrue($result->wasSuccessful());
+    }
+
+    public function testExpectOutputStringFooActualBar()
+    {
+        $test   = new PHPUnit_Tests_Fixtures_OutputTestCase('testExpectOutputStringFooActualBar');
+        $result = $test->run();
+
+        $this->assertEquals(1, count($result));
+        $this->assertFalse($result->wasSuccessful());
+    }
+
+    public function testExpectOutputRegexFooActualFoo()
+    {
+        $test   = new PHPUnit_Tests_Fixtures_OutputTestCase('testExpectOutputRegexFooActualFoo');
+        $result = $test->run();
+
+        $this->assertEquals(1, count($result));
+        $this->assertTrue($result->wasSuccessful());
+    }
+
+    public function testExpectOutputRegexFooActualBar()
+    {
+        $test   = new PHPUnit_Tests_Fixtures_OutputTestCase('testExpectOutputRegexFooActualBar');
+        $result = $test->run();
+
+        $this->assertEquals(1, count($result));
+        $this->assertFalse($result->wasSuccessful());
+    }
+
+    public function testSkipsIfRequiresHigherVersionOfPHPUnit()
+    {
+        $test   = new PHPUnit_Tests_Fixtures_RequirementsTest('testAlwaysSkip');
+        $result = $test->run();
+
+        $this->assertEquals(1, $result->skippedCount());
+        $this->assertEquals(
+          'PHPUnit 1111111 (or later) is required.',
+          $test->getStatusMessage()
+        );
+    }
+
+    public function testSkipsIfRequiresHigherVersionOfPHP()
+    {
+        $test   = new PHPUnit_Tests_Fixtures_RequirementsTest('testAlwaysSkip2');
+        $result = $test->run();
+
+        $this->assertEquals(1, $result->skippedCount());
+        $this->assertEquals(
+          'PHP 9999999 (or later) is required.',
+          $test->getStatusMessage()
+        );
     }
 }
