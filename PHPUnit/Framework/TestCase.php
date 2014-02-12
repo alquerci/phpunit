@@ -701,11 +701,9 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             if ($this->preserveGlobalState) {
                 $constants     = PHPUnit_Util_GlobalState::getConstantsAsString();
                 $globals       = PHPUnit_Util_GlobalState::getGlobalsAsString();
-                $includedFiles = PHPUnit_Util_GlobalState::getIncludedFilesAsString();
             } else {
                 $constants     = '';
                 $globals       = '';
-                $includedFiles = '';
 
                 if (!empty($GLOBALS['__PHPUNIT_BOOTSTRAP'])) {
                     $globals .= sprintf(
@@ -748,7 +746,6 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
                 'constants'                      => $constants,
                 'globals'                        => $globals,
                 'include_path'                   => $includePath,
-                'included_files'                 => $includedFiles,
                 'strict'                         => $strict
               )
             );
